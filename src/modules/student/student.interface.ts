@@ -24,7 +24,6 @@ export interface Student {
     email: string,
     dateOfBirth?: string,
     contactNo: string,
-    emargencyContactNo: string,
     bloodGroup?: BloodGroup,
     presentAddress: string,
     permanentAddress: string,
