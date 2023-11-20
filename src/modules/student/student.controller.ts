@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { Request, Response } from "express";
 import { StudentServices } from "./student.service";
+import studentJoiSchema from "./student.validation";
 
 
 
@@ -9,8 +10,16 @@ const createStudent = async (req: Request, res: Response) => {
     try {
         const { student } = req.body
 
-        // whill call service function to send this data
-        console.log(student);
+        const { error } = studentJoiSchema.validate(student)
+
+
+        if (error) {
+            res.status(500).json({
+                success: false,
+                message: `${error.message}`,
+                error: error.details
+            })
+        }
 
         const result = await StudentServices.createStudentIntoDb(student)
 
@@ -20,13 +29,13 @@ const createStudent = async (req: Request, res: Response) => {
             message: "Student Created Successfully",
             data: result
         })
-    } catch (error) {
+    } catch (error: unknown) {
         // eslint-disable-next-line no-console
-        console.log(error);
+        console.log({ error });
     }
 }
 
-const getAllStudens =async (req: Request, res: Response) => {
+const getAllStudens = async (req: Request, res: Response) => {
     try {
         const result = await StudentServices.getAllStudensFromDB()
         res.status(200).json({
@@ -40,12 +49,12 @@ const getAllStudens =async (req: Request, res: Response) => {
             success: false,
             message: "something went wrong on the controller",
         })
-    }   
+    }
 }
 
-const getSingleStudent =async (req:Request, res: Response) => {
+const getSingleStudent = async (req: Request, res: Response) => {
     try {
-        const {id} = req.params
+        const { id } = req.params
         const result = await StudentServices.getOneStudentFromDB(id)
         res.status(200).json({
             success: true,
@@ -66,4 +75,4 @@ export const StudentController = {
     createStudent,
     getAllStudens,
     getSingleStudent
-}
+} 

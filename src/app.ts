@@ -16,4 +16,11 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
+app.all("/*", (err: unknown, req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    message: "something went wrong /"
+  })
+})
+
 export default app;
