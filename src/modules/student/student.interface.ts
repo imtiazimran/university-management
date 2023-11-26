@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
+import { Model } from "mongoose";
 
 
 
-export interface Gurdian {
+export interface TGurdian {
     fatherName: string,
     fatherOccupation: string,
     fatherContactNo: string,
@@ -10,24 +12,46 @@ export interface Gurdian {
     motherContactNo: string,
 }
 
-export interface UserName {
+export interface TUserName {
     firstName: string,
     lastName: string
 }
 
-export type BloodGroup = "A+" | "A-" | "B+" | "B-" | "O+" | "O-" | "AB+" | "AB-";
+export type TBloodGroup = "A+" | "A-" | "B+" | "B-" | "O+" | "O-" | "AB+" | "AB-";
 
-export interface Student {
+export interface TStudent {
     id: string,
-    name: UserName,
-    gender: "male" | "female",
+    password: string,
+    name: TUserName,
+    gender: "male" | "female" | "Other",
     email: string,
     dateOfBirth?: string,
     contactNo: string,
-    bloodGroup?: BloodGroup,
+    bloodGroup?: TBloodGroup,
     presentAddress: string,
     permanentAddress: string,
-    gurdian: Gurdian,
+    gurdian: TGurdian,
     profileImg?: string,
-    isActive: "active" | "blocked"
+    isActive: "active" | "blocked",
+    isDeleted: boolean
 }
+
+
+// for creating statics 
+
+export interface TStudentModel extends Model<TStudent> {
+    isUserExist(id: string): Promise<TStudent | null>
+  }
+
+
+
+// {
+//     for using instance method 
+//     export type TStudentMethod = {
+//         isStudentExist(id: string): Promise<TStudent | null>
+//     }
+    
+//     export type TStudentModel = Model<TStudent, Record<string, never>, TStudentMethod>;
+
+
+// }
