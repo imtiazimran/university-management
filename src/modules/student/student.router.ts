@@ -5,7 +5,6 @@ const router = express.Router()
 
 
 // router will call controller
-router.post("/create-student", StudentController.createStudent)
 router.get("/", StudentController.getAllStudens)
 router.get("/:id", StudentController.getSingleStudent)
 router.delete("/:id", StudentController.deleteOneStudent)

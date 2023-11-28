@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 
 
 
@@ -21,7 +21,7 @@ export type TBloodGroup = "A+" | "A-" | "B+" | "B-" | "O+" | "O-" | "AB+" | "AB-
 
 export interface TStudent {
     id: string,
-    password: string,
+    user: Types.ObjectId;
     name: TUserName,
     gender: "male" | "female" | "Other",
     email: string,
@@ -32,7 +32,6 @@ export interface TStudent {
     permanentAddress: string,
     gurdian: TGurdian,
     profileImg?: string,
-    isActive: "active" | "blocked",
     isDeleted: boolean
 }
 

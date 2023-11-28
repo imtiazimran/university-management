@@ -28,7 +28,7 @@ const studentZodValidatorSchema = z.object({
     gurdian: gurdianSchema,
     profileImg: z.string().optional(),
     isActive: z.enum(["active", "blocked"]).default("active"),
-    // isDeleted: z.boolean()
+    isDeleted: z.boolean()
 });
 
 export default studentZodValidatorSchema;
