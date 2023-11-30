@@ -30,7 +30,6 @@ const gurdianSchema = new Schema<TGurdian>({
 }, {_id: false});
 
 const studentSchema = new Schema<TStudent, TStudentModel>({
-    id: { type: String, required: [true, "Student ID is required and must be unique"] },
     user: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -53,8 +52,9 @@ const studentSchema = new Schema<TStudent, TStudentModel>({
     presentAddress: { type: String, required: [true, "Present address is required"] },
     permanentAddress: { type: String, required: [true, "Permanent address is required"] },
     gurdian: { type: gurdianSchema, required: [true, "Guardian information is required"] },
+    AcademicSemister: {type: Schema.Types.ObjectId},
     profileImg: { type: String },
-    isDeleted: { type: Boolean, default: false }
+
 },
     {
         toJSON: {

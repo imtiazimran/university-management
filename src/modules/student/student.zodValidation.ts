@@ -14,21 +14,25 @@ const gurdianSchema = z.object({
     motherContactNo: z.string().min(1).max(15),
 });
 
-const studentZodValidatorSchema = z.object({
-    id: z.string().min(1).max(50),
-    password: z.string().min(8).max(20),
-    name: userNameSchema,
-    gender: z.enum(["male", "female", "Other"]),
-    dateOfBirth: z.string().min(1),
-    email: z.string().min(1).max(50),
-    contactNo: z.string().min(1).max(15),
-    bloodGroup: z.enum(["A+", "A-", "AB+", "AB-", "B+", "B-", "O+", "O-"]),
-    presentAddress: z.string().min(1),
-    permanentAddress: z.string().min(1),
-    gurdian: gurdianSchema,
-    profileImg: z.string().optional(),
-    isActive: z.enum(["active", "blocked"]).default("active"),
-    isDeleted: z.boolean()
+const studentCreateValidatorSchema = z.object({
+    body: z.object({
+        password: z.string().min(8).max(20),
+        student: z.object({
+            name: userNameSchema,
+            gender: z.enum(["male", "female", "Other"]),
+            dateOfBirth: z.string(),
+            email: z.string().min(1).max(50),
+            contactNo: z.string().min(1).max(15),
+            bloodGroup: z.enum(["A+", "A-", "AB+", "AB-", "B+", "B-", "O+", "O-"]),
+            presentAddress: z.string().min(1),
+            permanentAddress: z.string().min(1),
+            gurdian: gurdianSchema,
+            AcademicSemister: z.string(),
+            profileImg: z.string().optional()
+        })
+    })
 });
 
-export default studentZodValidatorSchema;
+export const validation = {
+    studentCreateValidatorSchema
+};

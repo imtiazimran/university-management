@@ -31,8 +31,8 @@ export interface TStudent {
     presentAddress: string,
     permanentAddress: string,
     gurdian: TGurdian,
+    AcademicSemister: Types.ObjectId,
     profileImg?: string,
-    isDeleted: boolean
 }
 
 

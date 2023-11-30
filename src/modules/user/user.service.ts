@@ -1,11 +1,13 @@
 import config from "../../config"
+import { AcademicSemisterModel } from "../academicSemister/academicSemister.model"
 import { TStudent } from "../student/student.interface"
 import { studentModel } from "../student/student.model"
 import {  TUser } from "./user.interface"
 import { UsersModel } from "./user.model"
+import { genaretStudentId } from "./user.utils"
 
 
-const createStudentIntoDb = async (password: string, student: TStudent) => {
+const createStudentIntoDb = async (password: string, payload: TStudent) => {
 
     // using the custom made statics
     // if (await studentModel.isUserExist(student.id)) {
@@ -19,8 +21,21 @@ const createStudentIntoDb = async (password: string, student: TStudent) => {
     
     // set student role
     user.role = "Student"
-    // set manual genareted ID
-    user.id = "2030100001"
+    
+   
+    // find academic semester info
+  const admissionSemester = await AcademicSemisterModel.findById(
+    payload.AcademicSemister,
+  );
+
+  if (admissionSemester) {
+      user.id = await genaretStudentId(admissionSemester)
+    
+  } else {
+    throw new Error("Admission semester not found");
+  }
+
+    // set id
 
     // create a user
     const InsurtedNewUser = await UsersModel.create(user) 
@@ -29,10 +44,10 @@ const createStudentIntoDb = async (password: string, student: TStudent) => {
 
     if(Object.keys(InsurtedNewUser).length){
         // set id and _id
-        student.id = InsurtedNewUser.id;
-        student.user = InsurtedNewUser._id // reference _id
+        payload.id = InsurtedNewUser.id;
+        payload.user = InsurtedNewUser._id // reference _id
 
-        const newStudent = await studentModel.create(student)
+        const newStudent = await studentModel.create(payload)
         return newStudent
     }
 

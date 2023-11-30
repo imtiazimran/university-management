@@ -4,6 +4,7 @@ import cors from "cors";
 import { StudentRoutes } from "./modules/student/student.router";
 import { UserRoute } from "./modules/user/user.router";
 import httpStatus from "http-status";
+import { AcademicSemisterRoute } from "./modules/academicSemister/academicSemister.router";
 const app: Application = express();
 
 // middlewere
@@ -18,6 +19,8 @@ app.use(cors());
 app.use("/api/v1/students", StudentRoutes)
 // user routes
 app.use("/api/v1/user", UserRoute)
+// Academic routes
+app.use("/api/v1/academy", AcademicSemisterRoute)
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
