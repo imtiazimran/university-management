@@ -32,6 +32,7 @@ export interface TStudent {
     permanentAddress: string,
     gurdian: TGurdian,
     AcademicSemister: Types.ObjectId,
+    AcademicDepartment: Types.ObjectId,
     profileImg?: string,
 }
 

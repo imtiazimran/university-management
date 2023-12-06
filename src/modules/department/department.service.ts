@@ -8,12 +8,12 @@ const createDepartmentInDB = async (payload: TDepartment)=>{
 }
 
 const getAllDepartmentFromDB =async () => {
-    const result = await departmentModel.find()
+    const result = await departmentModel.find().populate('faculty')
     return result
 }
 
 const getOneDepartmentFromDB =async (id: string) => {
-    const result = await departmentModel.findOne({id})
+    const result = await departmentModel.findOne({id}).populate('faculty')
     return result
 }
 

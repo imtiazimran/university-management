@@ -28,6 +28,7 @@ const studentCreateValidatorSchema = z.object({
             permanentAddress: z.string().min(1),
             gurdian: gurdianSchema,
             AcademicSemister: z.string(),
+            AcademicDepartment: z.string(),
             profileImg: z.string().optional()
         })
     })

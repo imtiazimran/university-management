@@ -52,7 +52,8 @@ const studentSchema = new Schema<TStudent, TStudentModel>({
     presentAddress: { type: String, required: [true, "Present address is required"] },
     permanentAddress: { type: String, required: [true, "Permanent address is required"] },
     gurdian: { type: gurdianSchema, required: [true, "Guardian information is required"] },
-    AcademicSemister: {type: Schema.Types.ObjectId},
+    AcademicSemister: {type: Schema.Types.ObjectId, ref: "Academic Semister"},
+    AcademicDepartment: {type: Schema.Types.ObjectId, ref: "AcademicDepartment"},
     profileImg: { type: String },
 
 },
