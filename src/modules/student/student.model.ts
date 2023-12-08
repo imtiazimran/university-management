@@ -16,9 +16,9 @@ const studentNameSchema = new Schema<TUserName>({
     lastName: {
         type: String,
         required: [true, "Last name is required"],
-        
+
     }
-}, {_id: false});
+}, { _id: false });
 
 const gurdianSchema = new Schema<TGurdian>({
     fatherName: { type: String, required: [true, "Father's name is required"] },
@@ -27,9 +27,14 @@ const gurdianSchema = new Schema<TGurdian>({
     motherName: { type: String, required: [true, "Mother's name is required"] },
     motherOccupation: { type: String, required: [true, "Mother's occupation is required"] },
     motherContactNo: { type: String, required: [true, "Mother's contact number is required"] },
-}, {_id: false});
+}, { _id: false });
 
 const studentSchema = new Schema<TStudent, TStudentModel>({
+    id: {
+        type: String,
+        required: [true, 'ID is required'],
+        unique: true,
+    },
     user: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -52,8 +57,12 @@ const studentSchema = new Schema<TStudent, TStudentModel>({
     presentAddress: { type: String, required: [true, "Present address is required"] },
     permanentAddress: { type: String, required: [true, "Permanent address is required"] },
     gurdian: { type: gurdianSchema, required: [true, "Guardian information is required"] },
-    AcademicSemister: {type: Schema.Types.ObjectId, ref: "Academic Semister"},
-    AcademicDepartment: {type: Schema.Types.ObjectId, ref: "AcademicDepartment"},
+    isDeleted: {
+        type: Boolean,
+        default: false,
+    },
+    AcademicSemister: { type: Schema.Types.ObjectId, ref: "Academic Semister" },
+    AcademicDepartment: { type: Schema.Types.ObjectId, ref: "AcademicDepartment" },
     profileImg: { type: String },
 
 },

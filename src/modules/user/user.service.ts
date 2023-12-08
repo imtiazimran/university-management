@@ -34,15 +34,17 @@ const createStudentIntoDb = async (password: string, payload: TStudent) => {
   const session = await mongoose.startSession()
 
   try {
+    session.startTransaction()
+
 
     if (admissionSemester) {
+      // set id
       user.id = await genaretStudentId(admissionSemester)
 
     } else {
       throw new Error("Admission semester not found");
     }
 
-    // set id
 
     // create a user transection 1
     const InsurtedNewUser = await UsersModel.create([user], { session })
@@ -58,20 +60,25 @@ const createStudentIntoDb = async (password: string, payload: TStudent) => {
     payload.id = InsurtedNewUser[0].id;
     payload.user = InsurtedNewUser[0]._id // reference _id
 
-    const newStudent = await studentModel.create([payload], {session})
-    if(!newStudent.length){
-      throw new AppError(httpStatus.BAD_REQUEST,"error occured and why")
+
+    // transiction - 2
+    const newStudent = await studentModel.create([payload], { session })
+    
+    if (!newStudent.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, "error occured and while creating new student")
     }
+
+
     await session.commitTransaction()
     await session.endSession()
 
-
-
     return newStudent
-  } catch (error) {
-  await session.abortTransaction()
-  await session.endSession()
-    console.log(error);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    await session.abortTransaction()
+    await session.endSession()
+    throw new Error(error);
   }
 
 

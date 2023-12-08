@@ -27,6 +27,7 @@ const studentCreateValidatorSchema = z.object({
             presentAddress: z.string().min(1),
             permanentAddress: z.string().min(1),
             gurdian: gurdianSchema,
+            isDeleted: z.boolean().default(false),
             AcademicSemister: z.string(),
             AcademicDepartment: z.string(),
             profileImg: z.string().optional()
