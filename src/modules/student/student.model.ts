@@ -7,11 +7,7 @@ const studentNameSchema = new Schema<TUserName>({
     firstName: {
         type: String,
         trim: true,
-        required: [true, "First name is required"],
-        validate: function (value: string) {
-            const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
-            return firstNameStr === value;
-        }
+        required: [true, "First name is required"]
     },
     lastName: {
         type: String,

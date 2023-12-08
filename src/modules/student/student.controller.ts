@@ -4,6 +4,7 @@ import { StudentServices } from "./student.service";
 import sendResponse from "../utils/sendRes";
 import httpStatus from "http-status";
 import catchAsync  from "../utils/catchAsync";
+import AppError from "../utils/AppError";
 
 
 
@@ -26,6 +27,25 @@ const getSingleStudent = catchAsync(async (req, res) => {
     
         const { id } = req.params
         const result = await StudentServices.getOneStudentFromDB(id)
+        if(result){
+
+            sendResponse(res, {
+                statusCode: httpStatus.OK,
+                success: true,
+                message: "Student fetched successfully",
+                data: result
+            })
+        }else{
+            throw new AppError(httpStatus.NOT_FOUND, "Student with this id not exist")
+        }
+})
+
+
+// update a student 
+const updateOneStudent = catchAsync( async (req, res) => {
+           const { id } = req.params;
+           const {student} = req.body
+        const result = await StudentServices.updateStudntFromDB(id, student)
         sendResponse(res, {
             statusCode: httpStatus.OK,
             success: true,
@@ -33,8 +53,6 @@ const getSingleStudent = catchAsync(async (req, res) => {
             data: result
         })
 })
-
-
 // delete a student 
 const deleteOneStudent = catchAsync( async (req, res) => {
            const { id } = req.params
@@ -51,5 +69,6 @@ const deleteOneStudent = catchAsync( async (req, res) => {
 export const StudentController = {
     getAllStudens,
     getSingleStudent,
-    deleteOneStudent
+    deleteOneStudent,
+    updateOneStudent
 }

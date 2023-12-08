@@ -29,8 +29,6 @@ userSchema.pre("save", async function (next) {
 
 userSchema.post('save', function (currentSavedDoc, next) {
     currentSavedDoc.password = ''
-    // eslint-disable-next-line no-console
-    console.log(currentSavedDoc, ' this is post hook: data saved successfully');
     next()
 })
 

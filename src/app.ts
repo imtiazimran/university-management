@@ -1,3 +1,5 @@
+/* eslint-disable no-cond-assign */
+/* eslint-disable no-constant-condition */
 /* eslint-disable no-unused-vars */
 import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
@@ -7,6 +9,10 @@ import httpStatus from "http-status";
 import { AcademicSemisterRoute } from "./modules/academicSemister/academicSemister.router";
 import { FacultyRoutes } from "./modules/AcademicFaculty/faculty.router";
 import { DepartmentRoutes } from "./modules/department/department.route";
+import { ZodError } from "zod";
+import config from "./config";
+import handleZodError, { TErrorSource } from "./modules/utils/handleZodError";
+import handleValidationError from "./modules/utils/handleValidationError";
 const app: Application = express();
 
 // middlewere
@@ -32,16 +38,47 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-app.use((err: any, req: Request, res: Response, next: NextFunction) =>{
-  const statusCode = 500;
-  const message = "something went wrong";
 
+
+
+
+
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  let statusCode = 500;
+  let message = err.message || "something went wrong";
+
+
+  let errorSource: TErrorSource = [{
+    path: '',
+    message: "something went wrong"
+  }]
+
+
+
+
+  if (err instanceof ZodError) {
+    // eslint-disable-next-line no-unused-expressions
+    const simplifiedError = handleZodError(err)
+    statusCode = simplifiedError?.statusCode
+    message = simplifiedError?.message
+    errorSource = simplifiedError?.errorSource
+  }
+  else if (err.message = "ValidationError") {
+    const simplifiedError = handleValidationError(err)
+
+    statusCode = simplifiedError?.statusCode
+    message = simplifiedError?.message
+    errorSource = simplifiedError?.errorSource
+  }
   return res.status(statusCode).json({
     success: false,
-    message: err.message || message,
-    error: err 
+    message,
+    errorSource,
+    stack: config.NODE_ENV === "devolopment" ? err?.stack : null
   })
+
 
 })
 
