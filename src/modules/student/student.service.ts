@@ -5,24 +5,87 @@ import AppError from "../utils/AppError";
 import httpStatus from "http-status";
 import { UsersModel } from "../user/user.model";
 import { TStudent } from "./student.interface";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 
-const getAllStudensFromDB = async () => {
-    const result = await studentModel.find()
+const getAllStudensFromDB = async (query: Record<string, unknown>) => {
+
+    // const queryObj = { ...query }
+
+    const searchAbleFields = ['email', 'name.firstName', 'presentAddress']
+
+    // let searchTerm = "";
+
+    // if (query?.searchTerm) {
+    //     searchTerm = query?.searchTerm as string
+    // }
+
+    // const searchQuery = studentModel.find(
+    //     {
+    //         $or: searchAbleFields
+    //             .map((field) => ({
+    //                 [field]: { $regex: searchTerm, $options: 'i' }
+    //             }))
+    //     }
+    // )
+
+    // const excludeFields = ['searchTerm', 'sort']
+
+    // excludeFields.forEach((item) => delete queryObj[item])
+
+
+    //     console.log(queryObj)
+
+    // const filterQuery = searchQuery.find(queryObj)
+    //     .populate('AcademicSemister')
+    //     .populate({
+    //         path: "AcademicDepartment",
+    //         populate: {
+    //             path: "faculty"
+    //         }
+    //     })
+    // let sort = '-createdAt'
+
+    // if (query.sort) {
+    //     sort = query.sort as string
+    // }
+
+    // const sortQuery = filterQuery.sort(sort)
+
+
+    // let limit = 1
+
+    // if(query.limit){
+    //     limit = Number(query.limit)
+    // }
+
+    // const limitQuery = await sortQuery.limit(limit)
+
+    const studentQuery = new QueryBuilder(studentModel.find()
         .populate('AcademicSemister')
         .populate({
             path: "AcademicDepartment",
             populate: {
                 path: "faculty"
             }
-        })
+        }),
+        query
+    )
+        .search(searchAbleFields)
+        .filter()
+        .sort()
+        .paginate()
+        .fields()
+
+    const result = await studentQuery.modelQuery
+    // console.log(result, studentQuery)
     return result
 }
 
 const getOneStudentFromDB = async (id: string) => {
     // const result = await studentModel.findOne(id)
 
-    const result = await studentModel.findOne({id})
+    const result = await studentModel.findById( id )
     return result
 }
 const updateStudntFromDB = async (id: string, payload: Partial<TStudent>) => {
@@ -43,8 +106,8 @@ const updateStudntFromDB = async (id: string, payload: Partial<TStudent>) => {
         }
     }
 
-    const result = await studentModel.findOneAndUpdate(
-        { id },
+    const result = await studentModel.findByIdAndUpdate(
+         id ,
         modifiedUpdatedData,
         {
             new: true,
@@ -58,8 +121,8 @@ const deleteOneStudentFromDB = async (id: string) => {
     const session = await mongoose.startSession()
     try {
         session.startTransaction()
-        const deleteStudent = await studentModel.updateOne(
-            { id },
+        const deleteStudent = await studentModel.findByIdAndUpdate(
+             id ,
             { isDeleted: true },
             { new: true, session }
         )
@@ -68,8 +131,11 @@ const deleteOneStudentFromDB = async (id: string) => {
             throw new AppError(httpStatus.BAD_REQUEST, "faild to delete student")
         }
 
-        const deleteUser = await UsersModel.updateOne(
-            { id },
+        // get the ref id from deleted student
+        const userId = deleteStudent.user 
+
+        const deleteUser = await UsersModel.findOneAndUpdate(
+            userId ,
             { isDeleted: true },
             { new: true, session }
         )

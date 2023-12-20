@@ -11,7 +11,8 @@ import AppError from "../utils/AppError";
 
 // get all student
 const getAllStudens = catchAsync(async (req, res) => {
-    const result = await StudentServices.getAllStudensFromDB()
+
+    const result = await StudentServices.getAllStudensFromDB(req.query)
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,

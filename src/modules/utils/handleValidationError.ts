@@ -1,7 +1,16 @@
 import mongoose from "mongoose";
 import { TErrorSource } from "./handleZodError";
+export type TGenericErrorResponse = {
+    statusCode: number,
+    message: string,
+    errorSource: TErrorSource
+}
 
-const handleValidationError = (err: mongoose.Error.ValidationError) => {
+
+const handleValidationError = (err: mongoose.Error.ValidationError)
+: TGenericErrorResponse => {
+
+
     const errorSource: TErrorSource = Object.values(err.errors).map(
         (val: mongoose.Error.ValidatorError |
             mongoose.Error.CastError) => {
@@ -14,12 +23,12 @@ const handleValidationError = (err: mongoose.Error.ValidationError) => {
             }
 
         })
-    const statusCode = 400
+        const statusCode = 400
+
     return {
         statusCode,
-        errorSource,
         message: "validation error",
-        // errorSource
+        errorSource,
     }
 }
 
