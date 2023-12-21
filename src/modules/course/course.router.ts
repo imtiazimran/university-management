@@ -12,7 +12,14 @@ router.get("/", CourseController.AllCourse)
 // single faculty
 router.get("/:id", CourseController.SingleCourse)
 // update faculty
-router.patch("/:id", validateRequest(CourseValidation.updateCourseValidationSchema), CourseController.UpdateACourse)
+router.put("/:id/assign-faculties",
+    validateRequest(CourseValidation.courseFacultieValidationSchema)
+    , CourseController.AssignFaculties)
+
+// remove faculty
+router.delete("/:id/remove-faculties",
+    validateRequest(CourseValidation.courseFacultieValidationSchema)
+    , CourseController.RemoveFacultieFromCourse)
 
 router.delete('/:id', CourseController.DeleteCourse)
 
